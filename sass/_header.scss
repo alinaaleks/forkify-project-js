@@ -1,0 +1,141 @@
+.header {
+  grid-area: head;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $color-grey-light-1;
+
+  &__logo {
+    display: block;
+    height: 4.6rem;
+    margin-left: 4rem;
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  padding-left: 3rem;
+  background-color: #fff;
+  border-radius: 10rem;
+  transition: all .3s;
+
+  &:focus-within {
+    box-shadow: 0 .7rem 3rem rgba($color-grey-dark-1, .08);
+    transform: translateY(-2px);
+  }
+
+  &__field {
+    width: 30rem;
+    background: none;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: 1.7rem;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder {
+      color: $color-grey-light-3;
+    }
+
+    @media only screen and (max-width: $bp-medium) {
+      width: auto;
+
+      &::placeholder {
+        color: #fff;
+      }
+    }
+  }
+
+  &__btn {
+    font-family: inherit;
+    font-weight: 600;
+  }
+}
+
+.nav {
+  align-self: stretch;
+  margin-right: 2.5rem;
+
+  &__list {
+    display: flex;
+    height: 100%;
+    list-style: none;
+  }
+
+  &__item {
+    position: relative;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: 0 1.5rem;
+    height: 100%;
+    background: none;
+    border: none;
+    color: inherit;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all .3s;
+
+    svg {
+      width: 2.4rem;
+      height: 2.4rem;
+      fill: $color-primary;
+      transform: translateY(-1px);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:hover {
+      background-color: $color-grey-light-2;
+    }
+  }
+}
+
+.bookmarks {
+  position: absolute;
+  right: -2.5rem;
+  z-index: 10;
+  visibility: hidden;
+  width: 40rem;
+  padding: 1rem 0;
+  background-color: #fff;
+  box-shadow: 0 .8rem 5rem 2rem rgba($color-grey-dark-1, .1);
+  opacity: 0;
+  transition: all .5s .2s;
+
+  &__list {
+    list-style: none;
+  }
+
+  &__field {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 4rem;
+    cursor: pointer;
+    transition: all .3s;
+
+    &:hover {
+      background-color: $color-grey-light-2;
+    }
+  }
+
+  &:hover,
+  .nav__btn--bookmarks:hover + & {
+    visibility: visible;
+    opacity: 1;
+  }
+}

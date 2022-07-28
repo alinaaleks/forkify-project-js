@@ -1,0 +1,42 @@
+.search-results {
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 0;
+}
+
+.results {
+  margin-bottom: 2rem;
+  list-style: none;
+}
+
+.pagination {
+  padding: 0 3.5rem;
+  margin-top: auto;
+
+  &::after {
+    display: table;
+    clear: both;
+    content: '';
+  }
+
+  &__btn {
+    &--prev {
+      float: left;
+    }
+    &--next {
+      float: right;
+    }
+  }
+}
+
+.copyright {
+  padding: 0 3.5rem;
+  margin-top: 4rem;
+  color: $color-grey-dark-2;
+  font-size: 1.2rem;
+
+  .twitter-link:link,
+  .twitter-link:visited {
+    color: $color-grey-dark-2;
+  }
+}
