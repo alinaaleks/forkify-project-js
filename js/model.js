@@ -147,63 +147,38 @@ clearBookmarks();
 
 export const uploadRecipe = async function(newRecipe) {
   try {
-   const ingredients = [];
-   const arrayOf6 = new Array(6).fill({});
-   
-   arrayOf6.forEach((_, i) => {
-     
-    // Take only ingredients data from recieved form in 6 different arrays
-    // Take raw input data and transform into the same format we get out from API with entries()
-    // console.log(newRecipe);
-    // console.log(Object.entries(newRecipe));
-    console.log(newRecipe);
-     const ingArr = newRecipe.filter(entry => {
-       return entry[0].startsWith(`unit-${i}`) ||
-       entry[0].startsWith(`quantity-${i}`) ||
-       entry[0].startsWith(`ingredient-${i}`);
-     });
+    // Create recipeObj for uploading (from received form arr)
+    const recipe = newRecipe.reduce((recipe, [name, value]) => {
+      // check whether the name has a number at the end
+      const [, prop, index] = name.match(/^(\w+)-(\d+)$/) ?? [];
 
-     ingArr.forEach(entry => entry[1].trim());
+      // if such name exists: => create (or find) ingredient obj and assign value. Rename property names if needed
+      if(prop) {
+        
+        const ingObj = recipe.ingredients[index] ??= {};
 
-     console.log(ingArr);
+        if(prop === 'quantity') value === '' ? ingObj[prop] = null : ingObj[prop] = +value;
+        else if(prop === 'ingredient') ingObj.description = value;
+        else ingObj[prop] = value;
+      }
+      else {
+        if(name === 'title') recipe[name] = value;
+        if(name === 'sourceURL') recipe.source_url = value;
+        if(name === 'image') recipe.image_url = value;
+        if(name === 'publisher') recipe.publisher = value;
+        if(name === 'cookingTime') recipe.cooking_time = +value;
+        if(name === 'servings') recipe.servings = +value;
+      }
+      return recipe;
+    }, { ingredients: [] });
 
-     // Loop over each array and rename future properties
-     ingArr.forEach(entry => {
-      [key, value] = entry;
-
-      if(key.includes('ingredient')) entry[0] = 'description';
-      if(key.includes('quantity')) entry[0] = 'quantity';
-      if(key.includes('unit')) entry[0] = 'unit';
-     });
-
-     // Create obj from array and push into ingredients array
-     const ingObj = Object.fromEntries(ingArr);
-     if(ingObj.description !== '') {
-      if(ingObj.quantity) {
-        ingObj.quantity = +ingObj.quantity;
-       } else {
-        ingObj.quantity = null;
-       }
-       ingredients.push(ingObj);
-     }
-    });
-
-    console.log(ingredients);
+    // Filter out empty ingredients
+    const ingArr = recipe.ingredients.filter(ing => ing.description !== '');
 
     // If all ingredient fields are empty
-    if(ingredients.length === 0) throw new Error('Wrong ingredient format. Please use correct format.');
+    if(ingArr.length === 0) throw new Error('Wrong ingredient format. Please use correct format.');
 
-    const rec = Object.fromEntries(newRecipe);
-    // Obj should be exactly the way we recieve it from API
-    const recipe = {
-      title: rec.title,
-      source_url: rec.sourceURL,
-      image_url: rec.image,
-      publisher: rec.publisher,
-      cooking_time: +rec.cookingTime,
-      servings: +rec.servings,
-      ingredients,
-    };
+    recipe.ingredients = ingArr;
 
     console.log(recipe);
     const data = await AJAX(`${API_URL}?key=${KEY}`, recipe);
